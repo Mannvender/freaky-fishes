@@ -1,14 +1,10 @@
-import { Box, Heading, Flex, Text } from "rebass";
-import { useState, useMemo, useEffect } from "react";
-import styled, { useTheme, css, createGlobalStyle } from "styled-components";
+import { Box, Flex, Text } from "rebass";
+import { useState, useEffect } from "react";
+import styled, { useTheme, css } from "styled-components";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
-import { FaExternalLinkAlt } from "react-icons/fa";
 import Label from "../Label";
 import Input from "../Input";
 import Button from "../Button";
-import { DEFAULT_ERROR_MESSAGE } from "messages";
-import { LinkExternal as Link } from "../Links";
 import { buttonCss } from "components/Button";
 
 import { WalletMultiButton as WalletMultiButtonBase } from "@solana/wallet-adapter-react-ui";
@@ -60,7 +56,6 @@ const WalletMultiButton = styled(WalletMultiButtonBase)`
 const MintSection = ({ ethAddress }) => {
   const wallet = useWallet();
   const { colors } = useTheme();
-  const router = useRouter();
 
   const [balance, setBalance] = useState();
   const [isActive, setIsActive] = useState(true); // true when countdown completes

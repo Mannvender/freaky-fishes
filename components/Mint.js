@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Box, Flex, Heading, Text } from "rebass";
-import styled, { useTheme } from "styled-components";
-import Image from "next/image";
+import { Flex, Heading, Text } from "rebass";
+import { useTheme } from "styled-components";
 import dynamic from "next/dynamic";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
