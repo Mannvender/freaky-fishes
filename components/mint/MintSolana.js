@@ -3,7 +3,6 @@ import { useState, useMemo, useEffect } from "react";
 import styled, { useTheme, css, createGlobalStyle } from "styled-components";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { isMobile } from "react-device-detect";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Label from "../Label";
 import Input from "../Input";
@@ -70,9 +69,8 @@ const MintSection = ({ ethAddress }) => {
   const [amount, setAmount] = useState(8);
   const [candyMachine, setCandyMachine] = useState();
 
-  const handleClick = async () => {
+  const mintOne = async () => {
     try {
-      setIsMinting(true);
       if (wallet.connected && candyMachine?.program && wallet.publicKey) {
         const mintTxId = await mintOneToken(
           candyMachine,
@@ -122,6 +120,18 @@ const MintSection = ({ ethAddress }) => {
         const balance = await connection.getBalance(wallet?.publicKey);
         setBalance(balance / LAMPORTS_PER_SOL);
       }
+    }
+  };
+  const handleClick = async () => {
+    setIsMinting(true);
+    const numOfMints = amount || 1;
+    try {
+      for (let index = 0; index < numOfMints; index++) {
+        await mintOne();
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
       setIsMinting(false);
     }
   };
@@ -176,6 +186,7 @@ const MintSection = ({ ethAddress }) => {
   //     setAmount(value);
   //   }
   // };
+  const handleChange = (e) => setAmount(parseInt(e.target.value));
 
   return (
     <Box p={[3]} mt={[4]}>
@@ -190,21 +201,33 @@ const MintSection = ({ ethAddress }) => {
           <WalletMultiButton />
           <>
             {wallet.connected && (
-              <Button
-                disabled={isSoldOut || isMinting || !isActive}
-                style={{ width: "100%" }}
-                color={colors.light}
-                onClick={handleClick}
-                disabled={!Boolean(amount)}
-              >
-                {isSoldOut
-                  ? "Sold Out"
-                  : isActive
-                  ? isMinting
-                    ? "Minting..."
-                    : "Mint"
-                  : "Not active"}
-              </Button>
+              <>
+                <Flex flexDirection="column" mb={[4]}>
+                  <Label htmlFor="num_mint">Number of mints</Label>
+                  <Input
+                    onChange={handleChange}
+                    id="num_mint"
+                    placeholder="How many?"
+                    value={amount}
+                    type="number"
+                    min={0}
+                  />
+                </Flex>
+                <Button
+                  disabled={isSoldOut || isMinting || !isActive}
+                  style={{ width: "100%" }}
+                  color={colors.light}
+                  onClick={handleClick}
+                >
+                  {isSoldOut
+                    ? "Sold Out"
+                    : isActive
+                    ? isMinting
+                      ? "Minting..."
+                      : "Mint " + (amount || 1)
+                    : "Not active"}
+                </Button>
+              </>
             )}
           </>
         </main>

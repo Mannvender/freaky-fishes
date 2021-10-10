@@ -16,6 +16,11 @@ export const buttonCss = css`
   :hover {
     background-image: linear-gradient(rgba(0, 0, 0, 0.15) 0 0);
   }
+  ${(props) =>
+    props.disabled &&
+    css`
+      background-color: ${props.theme.colors.dark2};
+    `}
 `;
 const StyledButton = styled.button`
   ${buttonCss}
